@@ -10,6 +10,10 @@ EoS uses smd files to determine music tracks, and what sounds to generate from t
 
 The application allows you to create a new smd file from scratch, or replace an existing one with the specified text document. Currently replacing an existing document will guarantee better results, as there are still hex bytes whos function is unknown and cannot be replicated at this time.
 
+All you have to do is bring the installer, the designated text file, and the designated smd file if performing a replace. From there open the python script and follow the instructions. When the console prints out "Complete!" your smd file has successfuly been generated/updated.
+
+This guide will not cover how to extract or import smd files from an EoS rom, however I would highly recommend checking out Tinke, a tool specifically made for that purpose
+
 # Commands
 
 There's quite a decent amount of commands, so here's a list of ones I can see being commonly used. For the ones not specified, check out [psy_commando's documentation on the smd file format](https://projectpokemon.org/docs/mystery-dungeon-nds/dse-smdl-format-r13/#Trk_Chunk), as all of the commands are found here.
@@ -69,4 +73,5 @@ I'll try to look at EoS's swd files and see if I can create a similar script for
 
 # Credits
 
-psy_commando for the documentation on PMD's smd files, I wouldn't have been able to create the language without their
+psy_commando for the documentation on PMD's smd files, I wouldn't have been able to create this parser if it weren't for how in-depth the man went with researching them
+The entire SkyTemple community for the idea and links to a metric fuckton of information regarding EoS's inner mechanisms as a whole
