@@ -67,6 +67,8 @@ LoopPoint()<br/>
 Pause16Bits(INSERT_NUMBER)<br/>
 EndOfTrack()
 
+Also BE CAREFUL WHEN USING THE NUMBER 98!!! EoS determines that number in particular to close the currently read track, and might break the entire file if used. Substitute that for 97 or 99 whenever possible, as the effect a single digit has on tick time is imperceptible
+
 # Credits
 
 psy_commando for the documentation on PMD's smd files, I wouldn't have been able to create this parser if it weren't for how in-depth the man went with researching them
