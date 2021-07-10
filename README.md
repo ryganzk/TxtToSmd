@@ -10,18 +10,18 @@ EoS uses smd files to determine music tracks, and what sounds to generate from t
 
 The application allows you to create a new smd file from scratch, or replace an existing one with the specified text document. Currently replacing an existing document will guarantee better results, as there are still hex bytes whos function is unknown and cannot be replicated at this time.
 
-All you have to do is bring the installer, the designated text file, and the designated smd file if performing a replace. From there open the python script and follow the instructions. When the console prints out "Complete!" your smd file has successfuly been generated/updated.
+All you need is a folder containing the python script, a text file consisting of usable commands, and the designated smd file if performing a replace. From there open the script and follow the instructions. When the console prints out "Complete!" your smd file has successfuly been generated/updated.
 
-This guide will not cover how to extract or import smd files from an EoS rom, however I would highly recommend checking out Tinke, a tool specifically made for that purpose
+This guide does not cover how to extract or import smd files from an EoS rom, however I would highly recommend checking out Tinke, a tool specifically made for that purpose
 
 # Commands
 
-There's quite a decent amount of commands, so here's a list of ones I can see being commonly used. For the ones not specified, check out [psy_commando's documentation on the smd file format](https://projectpokemon.org/docs/mystery-dungeon-nds/dse-smdl-format-r13/#Trk_Chunk), as all of the commands are found here.
+There's quite a decent amount of commands, so here's a list of ones you'll commonly used. I would highly urge you to check out [psy_commando's documentation on the smd file format](https://projectpokemon.org/docs/mystery-dungeon-nds/dse-smdl-format-r13/#Trk_Chunk), as all of the commands not specified are found here, or if you're curious about the file type's structure.
  
 | Command | Parameters | Function |
 | --- | --- | --- |
-| StartOfTrack() | 0 | Indicates the beginning of a new track (MUST BE USED) |
-| EndOfTrack() | 0 | Indicates the end of a new track (MUST BE USED) |
+| StartOfTrack() | 0 | Indicates the beginning of a track (MUST BE USED) |
+| EndOfTrack() | 0 | Indicates the end of a track (MUST BE USED) |
 | PlayNote()| 2-3 | Plays the specified note (see PlayNote section for more information) |
 | FixedDurationPause() | 1 | Pauses for a specified duration (explicitly uses pause constants, a list of which can be found below) |
 | SetTempo() | 1 | Sets the tempo of the song |
@@ -56,7 +56,7 @@ Here's a list of all constants, as well as their corresponding tick values:
 | TRIPLET_SIXTEENTH_NOTE | 3 |
 | SIXTY_FOURTH_NOTE | 2 |
 
-# PLEASE READ THIS BEFORE CONTINUING
+# PLEASE READ THIS BEFORE USE
 
 EoS smd files contain a starting track that is completely devoid of note data. I assume this is done so the rest of the tracks are able to be played smoothly. A good majority of these files contain hex data that translates to this:
 
@@ -64,12 +64,8 @@ StartOfTrack()<br/>
 SetTrackExpression(INSERT_VOLUME)<br/>
 TempoBPM(INSERT_BPM)<br/>
 LoopPoint()<br/>
-Pause16Bits(9)<br/>
+Pause16Bits(INSERT_NUMBER)<br/>
 EndOfTrack()
-
-# Next Steps
-
-I'll try to look at EoS's swd files and see if I can create a similar script for it. Hopefully now that I've finalized my first ever python script, I'll be able to create something slightly more optimized as a result??? Of course if issue reports are filed on this repository, fixing them will be my priority
 
 # Credits
 
