@@ -14,9 +14,9 @@ def GetFile(fileName, directory):
         if fileName in files: return True
     return False
 
-command = input('Would you like to generate a new smd file or replace an existing one? ')
-while(command != 'new' and command != 'replace'): command = input('Please enter \'new\' or \'replace\': ')
-if(command == 'new'):
+command = input('Would you like to generate a new smd file or replace an existing one? ').lower()
+while(command != 'new' and command != 'replace' and command != 'n' and command != 'r'): command = input('Please enter \'new\' or \'replace\': ')
+if(command == 'new' or command == 'n'):
     newFileName = input('What would you like to name your new file? ')
     while len(newFileName) > 15: newFileName = input('Specified name is over 15 characters, enter a new one:')
 else:
@@ -135,7 +135,8 @@ with open(textDoc + '.txt') as i:
             else: unadjustedHex = hexArray
 
             if(len(unadjustedHex) < 3): hexData = '00' + unadjustedHex
-            else: hexData = unadjustedHex[-2:] + unadjustedHex[2:-2] + unadjustedHex[:2]
+            elif(len(unadjustedHex) < 5): hexData = unadjustedHex[-2:] + unadjustedHex[2:-2] + unadjustedHex[:2]
+            else: hexData = unadjustedHex[-2:] + unadjustedHex[-4:-2] + unadjustedHex[4:-4] + unadjustedHex[2:4] + unadjustedHex[:2]
 
             lines = [s.replace(j, hexRep + hexData) for s in lines]
         return lines
@@ -263,11 +264,17 @@ with open(textDoc + '.txt') as i:
     lines = SingleParameterReplace('e1', 'E1(.*)', lines)
     lines = MultipleParameterReplace('e2', 'E2(.*)', lines)
     lines = SingleParameterReplace('e3', 'SetTrackExpression(.*)', lines)
+    lines = MultipleParameterReplace('e4', 'E4(.*)', lines)
+    lines = MultipleParameterReplace('e5', 'E5(.*)', lines)
     lines = SingleParameterReplace('e7', 'E7(.*)', lines)
     lines = SingleParameterReplace('e8', 'SetTrackPan(.*)', lines)
     lines = SingleParameterReplace('e9', 'E9(.*)', lines)
     lines = MultipleParameterReplace('ea', 'EA(.*)', lines)
+    lines = MultipleParameterReplace('ec', 'EC(.*)', lines)
+    lines = MultipleParameterReplace('ed', 'ED(.*)', lines)
     lines = SingleParameterReplace('ef', 'EF(.*)', lines)
+    lines = MultipleParameterReplace('f0', 'F0(.*)', lines)
+    lines = MultipleParameterReplace('f1', 'F1(.*)', lines)
     lines = MultipleParameterReplace('f2', 'F2(.*)', lines)
     lines = MultipleParameterReplace('f3', 'F3(.*)', lines)
     lines = SingleParameterReplace('f6', 'F6(.*)', lines)
@@ -289,6 +296,8 @@ with open(textDoc + '.txt') as i:
             lines[index2] = '98'
             while(len(''.join(lines[index1:index2 + 1])) % 8 != 0):
                 lines[index2] = lines[index2] + '98'
+
+    print('Writing to file...')
 
     if newFileName == '':
         with open(smdDoc + '.smd', 'rb') as smdFile:
@@ -336,9 +345,6 @@ with open(textDoc + '.txt') as i:
 
     hexData = bytes.fromhex(textData)
 
-    with open(textDoc + '_(Converted).txt', 'w') as textFile:
-        textFile.write(textData)
-
     if smdDoc != '': writtenSMDDoc = smdDoc
     else:
         writtenSMDDoc = newFileName
@@ -346,5 +352,11 @@ with open(textDoc + '.txt') as i:
     with open(writtenSMDDoc + '.smd', 'wb') as smdFile:
         smdFile.write(hexData)
 
+    generateTextHexFile = input('Would you like the generated hex data to be written in a text file? ')
+    if generateTextHexFile.lower() == 'yes' or generateTextHexFile.lower() == 'y':
+        with open(textDoc + '_(Hex).txt', 'w') as textFile:
+            textFile.write(textData)
+
     print('Complete!')
+
     i.close()
