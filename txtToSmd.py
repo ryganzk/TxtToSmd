@@ -174,44 +174,44 @@ with open(textDoc + '.txt') as i:
             case 'A':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = 'a'
-                    octave = int(hexNoteData[1][2], 10) - 2
+                    octave = int(hexNoteData[1][2], 10)
                 else:
                     playedNote = '9'
-                    octave = int(hexNoteData[1][1], 10) - 2
+                    octave = int(hexNoteData[1][1], 10)
             case 'B':
                 playedNote = 'b'
-                octave = int(hexNoteData[1][1], 10) - 2
+                octave = int(hexNoteData[1][1], 10)
             case 'C':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '1'
-                    octave = int(hexNoteData[1][2], 10) - 2
+                    octave = int(hexNoteData[1][2], 10)
                 else:
                     playedNote = '0'
-                    octave = int(hexNoteData[1][1], 10) - 2
+                    octave = int(hexNoteData[1][1], 10)
             case 'D':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '3'
-                    octave = int(hexNoteData[1][2], 10) - 2
+                    octave = int(hexNoteData[1][2], 10)
                 else:
                     playedNote = '2'
-                    octave = int(hexNoteData[1][1], 10) - 2
+                    octave = int(hexNoteData[1][1], 10)
             case 'E':
                 playedNote = '4'
-                octave = int(hexNoteData[1][1], 10) - 2
+                octave = int(hexNoteData[1][1], 10)
             case 'F':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '6'
-                    octave = int(hexNoteData[1][2], 10) - 2
+                    octave = int(hexNoteData[1][2], 10)
                 else:
                     playedNote = '5'
-                    octave = int(hexNoteData[1][1], 10) - 2
+                    octave = int(hexNoteData[1][1], 10)
             case 'G':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '8'
-                    octave = int(hexNoteData[1][2], 10) - 2
+                    octave = int(hexNoteData[1][2], 10)
                 else:
                     playedNote = '7'
-                    octave = int(hexNoteData[1][1], 10) - 2
+                    octave = int(hexNoteData[1][1], 10)
         extraneous = hex((parameters * 4) + octave)[2:]
         fullPlayString = '' + noteVelocity + '' + extraneous + playedNote + tickHex
         lines = [s.replace(j, fullPlayString) for s in lines]

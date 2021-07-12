@@ -106,7 +106,7 @@ with open (smdDoc + '.smd', 'rb') as i:
                 noteName = 'A#'
             case 'b':
                 noteName = 'B'
-        octave = (int(hexData[index + 1][0], 16) % 4) + 2
+        octave = int(hexData[index + 1][0], 16) % 4
         tickVar = ''
         hexData.pop(index + 1)
         for l in range(iterator):
