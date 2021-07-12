@@ -16,7 +16,7 @@ This guide does not cover how to extract or import smd files from an EoS rom, ho
 
 # Commands
 
-There's quite a decent amount of commands, so here's a list of ones you'll commonly used. I would highly urge you to check out [psy_commando's documentation on the smd file format](https://projectpokemon.org/docs/mystery-dungeon-nds/dse-smdl-format-r13/#Trk_Chunk), as all of the commands not specified are found here, or if you're curious about the file type's structure.
+There's quite a decent amount of commands, so here's a list of ones you'll commonly use. I urge you to check out [psy_commando's documentation on the smd file format](https://projectpokemon.org/docs/mystery-dungeon-nds/dse-smdl-format-r13/#Trk_Chunk), as all of the commands not specified are found here, or if you're particularly curious about the file type's structure.
  
 | Command | Parameters | Function |
 | --- | --- | --- |
@@ -31,7 +31,7 @@ There's quite a decent amount of commands, so here's a list of ones you'll commo
 
 The PlayNote command is arguably the most important command, as that'll be your primary way of generating a tone in your custom music track. As such it's the only command that takes more than one parameter to fully utilize it.
 
-The first parameter determines the volume of the played note. As is the case with all volume-related commands, this value ranges from 0 to 127. The second parameter determines the played note, as well as the octave. For instance, **C4** means the note played will be a C, and on the fourth octave. If a note has a sharp, simply include it after the note's letter (i.e. **A#5**). Octave numbers are between 2 and 5, and can be used in conjunction with the SetOctave() command for an even greater scope. The third parameter determines the amount of time the note is held in ticks. This parameter is completely optional, as an empty field simply represents a 0. Pause constants (described below) can be used below, as the application will use the tick amount they're equivalent to
+The first parameter determines the volume of the played note. As is the case with all volume-related commands, this value ranges from 0 to 127. The second parameter determines the played note, as well as the octave. For instance, **C2** means the note played will be a C, and on the second octave. If a note has a sharp, simply include it after the note's letter (i.e. **A#3**). Octave numbers are between 0 and 3, and can be used in conjunction with the SetOctave() command for an even greater scope. The third parameter determines the amount of time the note is held in ticks. This parameter is completely optional, as an empty field simply represents a 0. Pause constants (described below) can be used below, as the application will use the tick amount they're equivalent to. The tick parameter has a maximum of 16777215, an absurdly high amount that you shouldn't struggle with going over
 
 # Pause Constants
 
