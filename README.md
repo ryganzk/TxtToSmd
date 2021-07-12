@@ -1,6 +1,6 @@
 # What Is TxtToSmd?
 
-I created this tool in the span of a couple days to aid with inserting custom music tracks into Pokemon Mystery Dungeon: Explorers of Sky, all without any knowledge or usage of hex editing. Instead, the provided application converts text into hexadecimal data, which is then compiled into a usable smd document!
+I created this tool in the span of a week to aid with inserting custom music tracks into Pokemon Mystery Dungeon: Explorers of Sky, all without any knowledge or usage of hex editing. Instead, the provided application converts text into hexadecimal data, which is then compiled into a usable smd document!
 
 # What Are Smd Files?
 
@@ -20,7 +20,7 @@ There's quite a decent amount of commands, so here's a list of ones you'll commo
  
 | Command | Parameters | Function |
 | --- | --- | --- |
-| StartOfTrack() | 0 | Indicates the beginning of a track (MUST BE USED) |
+| StartOfTrack() | 1 | Indicates the beginning of a track, as well as the channel for playback (MUST BE USED) |
 | EndOfTrack() | 0 | Indicates the end of a track (MUST BE USED) |
 | PlayNote()| 2-3 | Plays the specified note (see PlayNote section for more information) |
 | FixedDurationPause() | 1 | Pauses for a specified duration (explicitly uses pause constants, a list of which can be found below) |
@@ -60,7 +60,7 @@ Here's a list of all constants, as well as their corresponding tick values:
 
 EoS smd files contain a starting track that is completely devoid of note data. I assume this is done so the rest of the tracks are able to be played smoothly. A good majority of these files contain hex data that translates to this:
 
-StartOfTrack()<br/>
+StartOfTrack(0)<br/>
 SetTrackExpression(INSERT_VOLUME)<br/>
 TempoBPM(INSERT_BPM)<br/>
 LoopPoint()<br/>
@@ -69,7 +69,11 @@ EndOfTrack()
 
 Also BE CAREFUL WHEN USING THE NUMBER 98!!! EoS determines that number in particular to close the currently read track, and might break the entire file if used. Substitute that for 97 or 99 whenever possible, as the effect a single digit has on tick time is imperceptible
 
+# Bonus Tool: SmdToTxt
+
+I've included an additional tool I've used to generate working smd files: SmdToTxt! This works in reverse from TxtToSmd; the script will ask for an smd file and interpret the hex data as a text file. I'd highly recommend using this to gain a solid understanding regarding a track's structure
+
 # Credits
 
 psy_commando for the documentation on PMD's smd files, I wouldn't have been able to create this parser if it weren't for how in-depth the man went with researching them
-The entire SkyTemple community for the idea and links to a metric fuckton of information regarding EoS's inner mechanisms as a whole
+The SkyTemple and PPorg communities for the idea and links to a metric fuckton of information regarding EoS's inner mechanisms
