@@ -65,6 +65,7 @@ with open(textDoc + '.txt') as i:
     lines = i.readlines()
     lines = [s.replace('\n', '') for s in lines]
     lines = [j for j in lines if j != '']
+    regexStartOfTrack = re.compile('StartOfTrack.*')
 
     def FixedDurationPause(regex, lines):
         newList = list(filter(regex.match, lines))
@@ -115,6 +116,7 @@ with open(textDoc + '.txt') as i:
 
         newList = list(filter(regex.match, lines))
         for j in newList:
+            print('Working on: ' + j)
             j = j.strip()
             insertData = hexRep + hex(int(j[len(regexString) - 3:-1].replace(' ', ''), 10))[2:]
             if(len(insertData) == 3): insertData = insertData[0:2] + '0' + insertData[len(insertData) - 1]
@@ -125,6 +127,7 @@ with open(textDoc + '.txt') as i:
         regex = re.compile(regexString)
         newList = list(filter(regex.match, lines))
         for j in newList:
+            print('Working on: ' + j)
             j = j.strip()
             hexArray = hex(int(j[len(regexString) - 3:-1].replace(' ', ''), 10))[2:]
 
@@ -140,9 +143,11 @@ with open(textDoc + '.txt') as i:
     regexNote = re.compile('PlayNote(.*)')
     newList = list(filter(regexNote.match, lines))
     for j in newList:
+        print('Working on: ' + j)
         j = j.strip()
         hexNoteData = j[9:-1].replace(' ', '').split(',')
         noteVelocity = hex(int(hexNoteData[0], 10))[2:]
+        if len(noteVelocity) < 2: noteVelocity = '0' + noteVelocity
 
         if(len(hexNoteData) >= 3):
             if not hexNoteData[2].isnumeric:
@@ -223,7 +228,7 @@ with open(textDoc + '.txt') as i:
     lines = [s.replace('9E()', '9e') for s in lines]
     lines = SingleParameterReplace('a0', 'SetTrackOctave(.*)', lines)
     lines = SingleParameterReplace('a1', 'AddToTrackOctave(.*)', lines)
-    lines = SingleParameterReplace('a4', 'TempoBPM(.*)', lines)
+    lines = SingleParameterReplace('a4', 'SetTempo(.*)', lines)
     lines = MultipleParameterReplace('a8', 'A8(.*)', lines)
     lines = SingleParameterReplace('a9', 'A9(.*)', lines)
     lines = SingleParameterReplace('aa', 'AA(.*)', lines)
@@ -253,21 +258,33 @@ with open(textDoc + '.txt') as i:
     lines = MultipleParameterReplace('d7', 'PitchBend(.*)', lines)
     lines = MultipleParameterReplace('d8', 'D8(.*)', lines)
     lines = SingleParameterReplace('db', 'DB(.*)', lines)
+    lines = SingleParameterReplace('df', 'DF(.*)', lines)
     lines = SingleParameterReplace('e0', 'SetTrackVolume(.*)', lines)
+    lines = SingleParameterReplace('e1', 'E1(.*)', lines)
+    lines = MultipleParameterReplace('e2', 'E2(.*)', lines)
     lines = SingleParameterReplace('e3', 'SetTrackExpression(.*)', lines)
+    lines = SingleParameterReplace('e7', 'E7(.*)', lines)
     lines = SingleParameterReplace('e8', 'SetTrackPan(.*)', lines)
+    lines = SingleParameterReplace('e9', 'E9(.*)', lines)
+    lines = MultipleParameterReplace('ea', 'EA(.*)', lines)
+    lines = SingleParameterReplace('ef', 'EF(.*)', lines)
+    lines = MultipleParameterReplace('f2', 'F2(.*)', lines)
+    lines = MultipleParameterReplace('f3', 'F3(.*)', lines)
+    lines = SingleParameterReplace('f6', 'F6(.*)', lines)
 
     for j in lines:
-        if (j == 'StartOfTrack()'):
-            index1 = lines.index('StartOfTrack()')
+        if (regexStartOfTrack.match(j)):
+            index1 = lines.index(j)
             index2 = lines.index('EndOfTrack()')
             trkLength = hex(int((len(''.join(lines[index1 + 1:index2])) / 2) + 5))[2:]
+            chnlCount = hex(int(j[13:-1], 10))[2:]
+            if len(chnlCount) < 2: chnlCount = '0' + chnlCount
             if(len(trkLength) > 8): raise Exception('Track length is too big')
             if(len(trkLength) % 2 != 0): trkLength = '0' + trkLength
             if(len(trkLength) > 2 and len(trkLength) < 7): trkLength = trkLength[-2:] + trkLength[2:-2] + trkLength[:2]
             elif(len(trkLength) >= 7): trkLength = trkLength[-2:] + trkLength[4:-2] + trkLength[2:-4] + trkLength[:2]
             while(len(trkLength) != 8): trkLength += '00'
-            lines[index1] = '74726b200000000104ff0000' + trkLength + ('0' if trkCount < 16 else '') + hex(trkCount)[2:] + '000000'
+            lines[index1] = '74726b200000000104ff0000' + trkLength + ('0' if trkCount < 16 else '') + hex(trkCount)[2:] + chnlCount + '0000'
             trkCount += 1
             lines[index2] = '98'
             while(len(''.join(lines[index1:index2 + 1])) % 8 != 0):
@@ -292,10 +309,9 @@ with open(textDoc + '.txt') as i:
     second = hex(int(str(time.ctime())[17:19]))[2:]
     if len(second) < 2: second = '0' + second
     currentHexTime = year + month + day + hour + minute + second + '00'
-    trkChunks = hex(trkCount + 1)[2:]
+    trkChunks = hex(trkCount)[2:]
+    chnlChunks = '{0:#0{1}x}'.format((int(chnlCount, 16) + 1), 4)[2:]
     if len(trkChunks) < 2: trkChunks = '0' + trkChunks
-    chnlCount = hex(trkCount)[2:]
-    if len(chnlCount) < 2: chnlCount = '0' + chnlCount
 
     if len(smdDoc) == 0:
         smdHeader = '736d646c00000000' + '1504' + '0000' + '0000000000000000' + currentHexTime + fileName + '0100000001000000ffffffffffffffff'
@@ -304,7 +320,7 @@ with open(textDoc + '.txt') as i:
             unkData = smdFile.read().hex()[28:32]
         smdHeader = '736d646c00000000' + '1504' + unkData + '0000000000000000' + currentHexTime + fileName + '0100000001000000ffffffffffffffff'
 
-    songChunk = '736f6e670000000110ff0000b0ffffff0100300001ff' + trkChunks + chnlCount + '0000000fffffffff00000040004040000002000800ffffffffffffffffffffffffffffffffffffff'
+    songChunk = '736f6e670000000110ff0000b0ffffff0100300001ff' + trkChunks + chnlChunks + '0000000fffffffff00000040004040000002000800ffffffffffffffffffffffffffffffffffffff'
     eocChunk = '656f63200000000104ff000000000000'
 
     textData = smdHeader + songChunk + ''.join(lines) + eocChunk
