@@ -107,6 +107,17 @@ with open(textDoc + '.txt') as i:
                     lines = [s.replace(j, '8f') for s in lines]
         return lines
 
+    def GetOctaveData(param):
+        match param:
+            case '+':
+                return 3
+            case ' ':
+                return 2
+            case '-':
+                return 1
+            case '0':
+                return 0
+
     def SingleParameterReplace(hexRep, regexString, lines):
         regex = re.compile(regexString)
 
@@ -170,48 +181,50 @@ with open(textDoc + '.txt') as i:
             parameters = 0
             tickHex = ''
 
+        hexNoteData[1] = hexNoteData[1] + ' '
+
         match hexNoteData[1][0]:
             case 'A':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = 'a'
-                    octave = int(hexNoteData[1][2], 10)
+                    octave = GetOctaveData(hexNoteData[1][2])
                 else:
                     playedNote = '9'
-                    octave = int(hexNoteData[1][1], 10)
+                    octave = GetOctaveData(hexNoteData[1][1])
             case 'B':
                 playedNote = 'b'
-                octave = int(hexNoteData[1][1], 10)
+                octave = GetOctaveData(hexNoteData[1][1])
             case 'C':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '1'
-                    octave = int(hexNoteData[1][2], 10)
+                    octave = GetOctaveData(hexNoteData[1][2])
                 else:
                     playedNote = '0'
-                    octave = int(hexNoteData[1][1], 10)
+                    octave = GetOctaveData(hexNoteData[1][1])
             case 'D':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '3'
-                    octave = int(hexNoteData[1][2], 10)
+                    octave = GetOctaveData(hexNoteData[1][2])
                 else:
                     playedNote = '2'
-                    octave = int(hexNoteData[1][1], 10)
+                    octave = GetOctaveData(hexNoteData[1][1])
             case 'E':
                 playedNote = '4'
-                octave = int(hexNoteData[1][1], 10)
+                octave = GetOctaveData(hexNoteData[1][1])
             case 'F':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '6'
-                    octave = int(hexNoteData[1][2], 10)
+                    octave = GetOctaveData(hexNoteData[1][2])
                 else:
                     playedNote = '5'
-                    octave = int(hexNoteData[1][1], 10)
+                    octave = GetOctaveData(hexNoteData[1][1])
             case 'G':
                 if (hexNoteData[1][1] == '#'):
                     playedNote = '8'
-                    octave = int(hexNoteData[1][2], 10)
+                    octave = GetOctaveData(hexNoteData[1][2])
                 else:
                     playedNote = '7'
-                    octave = int(hexNoteData[1][1], 10)
+                    octave = GetOctaveData(hexNoteData[1][1])
         extraneous = hex((parameters * 4) + octave)[2:]
         fullPlayString = '' + noteVelocity + '' + extraneous + playedNote + tickHex
         lines = [s.replace(j, fullPlayString) for s in lines]
