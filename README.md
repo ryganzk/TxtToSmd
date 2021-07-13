@@ -75,5 +75,5 @@ I've included an additional tool I've used to generate working smd files: SmdToT
 
 # Credits
 
-psy_commando for the documentation on PMD's smd files, I wouldn't have been able to create this parser if it weren't for how in-depth the man went with researching them
+psy_commando for the documentation on PMD's smd files, I wouldn't have been able to create this parser if it weren't for how in-depth the man went with researching them<br/>
 The SkyTemple and PPorg communities for the idea and links to a metric fuckton of information regarding EoS's inner mechanisms
