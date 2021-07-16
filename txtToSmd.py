@@ -26,39 +26,26 @@ textDoc = input('Which text document would you like to convert to smd? ')
 while(GetFile(textDoc + '.txt', os.getcwd()) == False): textDoc = input('That file could not be found, try again: ')
 
 def PauseConstant(pauseConstant):
-    match pauseConstant:
-        case 'HALF_NOTE':
-            return 96
-        case 'DOTTED_QUARTER_NOTE':
-            return 72
-        case 'TRIPLET_WHOLE_NOTE':
-            return 64
-        case 'QUARTER_NOTE':
-            return 48
-        case 'DOTTED_EIGHTH_NOTE':
-            return 36
-        case 'TRIPLET_HALF_NOTE':
-            return 32
-        case 'EIGHTH_NOTE':
-            return 24
-        case 'DOTTED_SIXTEENTH_NOTE':
-            return 18
-        case 'TRIPLET_QUARTER_NOTE':
-            return 16
-        case 'SIXTEENTH_NOTE':
-            return 12
-        case 'DOTTED_THIRTY_SECOND_NOTE':
-            return 9
-        case 'TRIPLET_EIGHTH_NOTE':
-            return 8
-        case 'THIRTY_SECOND_NOTE':
-            return 6
-        case 'DOTTED_SIXTY_FOURTH_NOTE':
-            return 4
-        case 'TRIPLET_SIXTEENTH_NOTE':
-            return 3
-        case 'SIXTY_FOURTH_NOTE':
-            return 2
+    switcher = {
+        'HALF_NOTE': 96,
+        'DOTTED_QUARTER_NOTE': 72,
+        'TRIPLET_WHOLE_NOTE': 64,
+        'QUARTER_NOTE': 48,
+        'DOTTED_EIGHTH_NOTE': 36,
+        'TRIPLET_HALF_NOTE': 32,
+        'EIGHTH_NOTE': 24,
+        'DOTTED_SIXTEENTH_NOTE': 18,
+        'TRIPLET_QUARTER_NOTE': 16,
+        'SIXTEENTH_NOTE': 12,
+        'DOTTED_THIRTY_SECOND_NOTE': 9,
+        'TRIPLET_EIGHTH_NOTE': 8,
+        'THIRTY_SECOND_NOTE': 6,
+        'DOTTED_SIXTY_FOURTH_NOTE': 4,
+        'TRIPLET_SIXTEENTH_NOTE': 3,
+        'SIXTY_FOURTH_NOTE': 2
+    }
+
+    return switcher.get(pauseConstant)
 
 with open(textDoc + '.txt') as i:
     trkCount = 0
@@ -72,51 +59,39 @@ with open(textDoc + '.txt') as i:
         for j in newList:
             j = j.strip()
             pauseLength = j[19:-1]
-            match PauseConstant(pauseLength):
-                case 96:
-                    lines = [s.replace(j, '80') for s in lines]
-                case 72:
-                    lines = [s.replace(j, '81') for s in lines]
-                case 64:
-                    lines = [s.replace(j, '82') for s in lines]
-                case 48:
-                    lines = [s.replace(j, '83') for s in lines]
-                case 36:
-                    lines = [s.replace(j, '84') for s in lines]
-                case 32:
-                    lines = [s.replace(j, '85') for s in lines]
-                case 24:
-                    lines = [s.replace(j, '86') for s in lines]
-                case 18:
-                    lines = [s.replace(j, '87') for s in lines]
-                case 16:
-                    lines = [s.replace(j, '88') for s in lines]
-                case 12:
-                    lines = [s.replace(j, '89') for s in lines]
-                case 9:
-                    lines = [s.replace(j, '8a') for s in lines]
-                case 8:
-                    lines = [s.replace(j, '8b') for s in lines]
-                case 6:
-                    lines = [s.replace(j, '8c') for s in lines]
-                case 4:
-                    lines = [s.replace(j, '8d') for s in lines]
-                case 3:
-                    lines = [s.replace(j, '8e') for s in lines]
-                case 2:
-                    lines = [s.replace(j, '8f') for s in lines]
+            print('Working on: ' + j)
+
+            switcher = {
+                96: '80',
+                72: '81',
+                64: '82',
+                48: '83',
+                36: '84',
+                32: '85',
+                24: '86',
+                18: '87',
+                16: '88',
+                12: '89',
+                9: '8a',
+                8: '8b',
+                6: '8c',
+                4: '8d',
+                3: '8e',
+                2: '8f'
+            }
+
+            lines = [s.replace(j, switcher.get(PauseConstant(pauseLength))) for s in lines]
         return lines
 
     def GetOctaveData(param):
-        match param:
-            case '+':
-                return 3
-            case ' ':
-                return 2
-            case '-':
-                return 1
-            case '0':
-                return 0
+        switcher = {
+            '+': 3,
+            ' ': 2,
+            '-': 1,
+            '0': 0
+        }
+
+        return switcher.get(param)
 
     def SingleParameterReplace(hexRep, regexString, lines):
         regex = re.compile(regexString)
@@ -181,50 +156,34 @@ with open(textDoc + '.txt') as i:
             parameters = 0
             tickHex = ''
 
-        hexNoteData[1] = hexNoteData[1] + ' '
+        noteOnly = hexNoteData[1]
+        removeThese = '+-0'
 
-        match hexNoteData[1][0]:
-            case 'A':
-                if (hexNoteData[1][1] == '#'):
-                    playedNote = 'a'
-                    octave = GetOctaveData(hexNoteData[1][2])
-                else:
-                    playedNote = '9'
-                    octave = GetOctaveData(hexNoteData[1][1])
-            case 'B':
-                playedNote = 'b'
-                octave = GetOctaveData(hexNoteData[1][1])
-            case 'C':
-                if (hexNoteData[1][1] == '#'):
-                    playedNote = '1'
-                    octave = GetOctaveData(hexNoteData[1][2])
-                else:
-                    playedNote = '0'
-                    octave = GetOctaveData(hexNoteData[1][1])
-            case 'D':
-                if (hexNoteData[1][1] == '#'):
-                    playedNote = '3'
-                    octave = GetOctaveData(hexNoteData[1][2])
-                else:
-                    playedNote = '2'
-                    octave = GetOctaveData(hexNoteData[1][1])
-            case 'E':
-                playedNote = '4'
-                octave = GetOctaveData(hexNoteData[1][1])
-            case 'F':
-                if (hexNoteData[1][1] == '#'):
-                    playedNote = '6'
-                    octave = GetOctaveData(hexNoteData[1][2])
-                else:
-                    playedNote = '5'
-                    octave = GetOctaveData(hexNoteData[1][1])
-            case 'G':
-                if (hexNoteData[1][1] == '#'):
-                    playedNote = '8'
-                    octave = GetOctaveData(hexNoteData[1][2])
-                else:
-                    playedNote = '7'
-                    octave = GetOctaveData(hexNoteData[1][1])
+        for char in removeThese:
+            noteOnly = noteOnly.replace(char, '')
+
+        if len(noteOnly) < 2: hexNoteData[1] = hexNoteData[1][0] + ' ' + hexNoteData[1][1:]
+        if len(hexNoteData[1]) < 3: hexNoteData[1] = hexNoteData[1] + ' '
+
+        switcher = {
+            'A ': '9',
+            'A#': 'a',
+            'B ': 'b',
+            'C ': '0',
+            'C#': '1',
+            'D ': '2',
+            'D#': '3',
+            'E ': '4',
+            'F ': '5',
+            'F#': '6',
+            'G ': '7',
+            'G#': '8'
+        }
+
+        playedNote = switcher.get(hexNoteData[1][0:2])
+        hexNoteData[1].replace(playedNote, '')
+        octave = GetOctaveData(hexNoteData[1][2])
+
         extraneous = hex((parameters * 4) + octave)[2:]
         fullPlayString = '' + noteVelocity + '' + extraneous + playedNote + tickHex
         lines = [s.replace(j, fullPlayString) for s in lines]

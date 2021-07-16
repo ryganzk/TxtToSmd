@@ -81,40 +81,30 @@ with open (smdDoc + '.smd', 'rb') as i:
     hexData = [''.join(lines)[index : index + 2] for index in range(0, len(''.join(lines)), 2)]
 
     def NoteTicks(iterator, index):
-        match hexData[index + 1][1]:
-            case '0':
-                noteName = 'C'
-            case '1':
-                noteName = 'C#'
-            case '2':
-                noteName = 'D'
-            case '3':
-                noteName = 'D#'
-            case '4':
-                noteName = 'E'
-            case '5':
-                noteName = 'F'
-            case '6':
-                noteName = 'F#'
-            case '7':
-                noteName = 'G'
-            case '8':
-                noteName = 'G#'
-            case '9':
-                noteName = 'A'
-            case 'a':
-                noteName = 'A#'
-            case 'b':
-                noteName = 'B'
+        switchNote = {
+            '0': 'C',
+            '1': 'C#',
+            '2': 'D',
+            '3': 'D#',
+            '4': 'E',
+            '5': 'F',
+            '6': 'F#',
+            '7': 'G',
+            '8': 'G#',
+            '9': 'A',
+            'a': 'A#',
+            'b': 'B',
+        }
 
-        octave = ''
-        match int(hexData[index + 1][0], 16) % 4:
-            case 0:
-                octave = '0'
-            case 1:
-                octave = '-'
-            case 3:
-                octave = '+'
+        noteName = switchNote.get(hexData[index + 1][1])
+
+        switchOct = {
+            0: '0',
+            1: '-',
+            3: '+'
+        }
+
+        octave = switchOct.get(int(hexData[index + 1][0], 16) % 4, '')
 
         tickVar = ''
         hexData.pop(index + 1)
@@ -140,39 +130,26 @@ with open (smdDoc + '.smd', 'rb') as i:
                         else:
                             NoteTicks(3, j)
                 elif int(hexData[j][0]) == 8:
-                    match hexData[j][1]:
-                        case '0':
-                            hexData[j] = 'FixedDurationPause(HALF_NOTE)'
-                        case '1':
-                            hexData[j] = 'FixedDurationPause(DOTTED_QUARTER_NOTE)'
-                        case '2':
-                            hexData[j] = 'FixedDurationPause(TRIPLET_WHOLE_NOTE)'
-                        case '3':
-                            hexData[j] = 'FixedDurationPause(QUARTER_NOTE)'
-                        case '4':
-                            hexData[j] = 'FixedDurationPause(DOTTED_EIGHTH_NOTE)'
-                        case '5':
-                            hexData[j] = 'FixedDurationPause(TRIPLET_HALF_NOTE)'
-                        case '6':
-                            hexData[j] = 'FixedDurationPause(EIGHTH_NOTE)'
-                        case '7':
-                            hexData[j] = 'FixedDurationPause(DOTTED_SIXTEENTH_NOTE)'
-                        case '8':
-                            hexData[j] = 'FixedDurationPause(TRIPLET_QUARTER_NOTE)'
-                        case '9':
-                            hexData[j] = 'FixedDurationPause(SIXTEENTH_NOTE)'
-                        case 'a':
-                            hexData[j] = 'FixedDurationPause(DOTTED_THIRTY_SECOND_NOTE)'
-                        case 'b':
-                            hexData[j] = 'FixedDurationPause(TRIPLET_EIGHTH_NOTE)'
-                        case 'c':
-                            hexData[j] = 'FixedDurationPause(THIRTY_SECOND_NOTE)'
-                        case 'd':
-                            hexData[j] = 'FixedDurationPause(DOTTED_SIXTY_FOURTH_NOTE)'
-                        case 'e':
-                            hexData[j] = 'FixedDurationPause(TRIPLET_SIXTEENTH_NOTE)'
-                        case 'f':
-                            hexData[j] = 'FixedDurationPause(SIXTY_FOURTH_NOTE)'
+                    switchPause = {
+                        '0': 'FixedDurationPause(HALF_NOTE)',
+                        '1': 'FixedDurationPause(DOTTED_QUARTER_NOTE)',
+                        '2': 'FixedDurationPause(TRIPLET_WHOLE_NOTE)',
+                        '3': 'FixedDurationPause(QUARTER_NOTE)',
+                        '4': 'FixedDurationPause(DOTTED_EIGHTH_NOTE)',
+                        '5': 'FixedDurationPause(TRIPLET_HALF_NOTE)',
+                        '6': 'FixedDurationPause(EIGHTH_NOTE)',
+                        '7': 'FixedDurationPause(DOTTED_SIXTEENTH_NOTE)',
+                        '8': 'FixedDurationPause(TRIPLET_QUARTER_NOTE)',
+                        '9': 'FixedDurationPause(SIXTEENTH_NOTE)',
+                        'a': 'FixedDurationPause(DOTTED_THIRTY_SECOND_NOTE)',
+                        'b': 'FixedDurationPause(TRIPLET_EIGHTH_NOTE)',
+                        'c': 'FixedDurationPause(THIRTY_SECOND_NOTE)',
+                        'd': 'FixedDurationPause(DOTTED_SIXTY_FOURTH_NOTE)',
+                        'e': 'FixedDurationPause(TRIPLET_SIXTEENTH_NOTE)',
+                        'f': 'FixedDurationPause(SIXTY_FOURTH_NOTE)'
+                    }
+                    
+                    hexData[j] = switchPause.get(hexData[j][1])
             for k in commands:
                 if hexData[j] == k[0]:
                     hexVar = ''
